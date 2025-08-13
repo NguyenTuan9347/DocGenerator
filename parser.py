@@ -152,8 +152,16 @@ def parse(lines: List[str], parent_indent: int = -1) -> List[DocumentNode]:
     return nodes
 
 
-def print_tree(nodes: List[DocumentNode], level: int = 0):
-    """Pretty print the document tree"""
+def print_tree(nodes_by_file: dict[Path, list[DocumentNode]]):
+    """Pretty print the document tree for multiple files."""
+    for file_path, nodes in nodes_by_file.items():
+        print(f"\n{'='*60}")
+        print(f"File: {file_path}")
+        print("=" * 60)
+        _print_nodes(nodes)
+
+
+def _print_nodes(nodes: list[DocumentNode], level: int = 0):
     display_indent = "  " * level
     for node in nodes:
         signature = node.identifier.content
@@ -164,12 +172,10 @@ def print_tree(nodes: List[DocumentNode], level: int = 0):
 
         if node.description:
             cleaned_desc = node.description.strip()
-
             if cleaned_desc.startswith('"""') or cleaned_desc.startswith("'''"):
                 cleaned_desc = cleaned_desc[3:]
             if cleaned_desc.endswith('"""') or cleaned_desc.endswith("'''"):
                 cleaned_desc = cleaned_desc[:-3]
-
             cleaned_desc = cleaned_desc.strip()
 
             if cleaned_desc:
@@ -181,4 +187,65 @@ def print_tree(nodes: List[DocumentNode], level: int = 0):
                         print(f"{display_indent}{prefix}{line}")
 
         if node.children:
-            print_tree(node.children, level + 1)
+            _print_nodes(node.children, level + 1)
+
+
+def generate_html(nodes_by_file: dict[Path, list[DocumentNode]], level=0):
+    html = []
+    indent = "  " * level
+
+    for file_path, nodes in nodes_by_file.items():
+        html.append(f"{indent}<h2>{file_path}</h2>")
+        html.append(_generate_nodes_html(nodes, level))
+    return "\n".join(html)
+
+
+def _generate_nodes_html(nodes, level=0):
+    html = []
+    indent = "  " * level
+
+    html.append(f"{indent}<ul>")
+    for node in nodes:
+        sig = node.identifier.content
+        html.append(f"{indent}  <li><strong>{sig}</strong>")
+
+        if node.description:
+            desc = node.description.strip()
+            if desc.startswith('"""') or desc.startswith("'''"):
+                desc = desc[3:]
+            if desc.endswith('"""') or desc.endswith("'''"):
+                desc = desc[:-3]
+            desc = desc.strip()
+            if desc:
+                html.append(f"{indent}    <div class='desc'>{desc}</div>")
+
+        if node.children:
+            html.append(_generate_nodes_html(node.children, level + 2))
+
+        html.append(f"{indent}  </li>")
+    html.append(f"{indent}</ul>")
+
+    return "\n".join(html)
+
+
+def save_html(nodes_by_file: dict[Path, list[DocumentNode]], output_file="index.html"):
+    html_content = f"""<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Code Index</title>
+    <style>
+        body {{ font-family: Arial, sans-serif; }}
+        ul {{ list-style-type: none; }}
+        li {{ margin-bottom: 8px; }}
+        .desc {{ color: gray; font-size: 0.9em; margin-left: 1em; }}
+        h2 {{ border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-top: 20px; }}
+    </style>
+</head>
+<body>
+<h1>Code Index</h1>
+{generate_html(nodes_by_file)}
+</body>
+</html>
+"""
+    Path(output_file).write_text(html_content, encoding="utf-8")

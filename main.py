@@ -1,5 +1,6 @@
 from pathlib import Path
-from parser import parse, print_tree
+from parser import parse, print_tree, save_html
+from collections import defaultdict
 
 
 def main(path: Path):
@@ -13,7 +14,8 @@ def main(path: Path):
     else:
         print(f"Invalid path or not a Python file: {path}")
         return
-
+    print(files)
+    nodes = defaultdict(list)
     for file in files:
         print(f"\n{'='*60}")
         print(f"Processing: {file}")
@@ -24,15 +26,12 @@ def main(path: Path):
                 content = f.read()
                 lines = content.splitlines()
 
-            nodes = parse(lines)
-
-            if nodes:
-                print_tree(nodes)
-            else:
-                print("No classes or functions found.")
+            nodes[file.resolve()] = parse(lines)
 
         except Exception as e:
             print(f"Error processing {file}: {e}")
+    save_html(nodes, f"index.html")
+    print_tree(nodes)
 
 
 if __name__ == "__main__":

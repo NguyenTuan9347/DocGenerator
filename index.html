@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Code Index</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        ul { list-style-type: none; }
+        li { margin-bottom: 8px; }
+        .desc { color: gray; font-size: 0.9em; margin-left: 1em; }
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+<h1>Code Index</h1>
+<h2>/home/min/Documents/DocGenerator/main.py</h2>
+<ul>
+  <li><strong>def main(path: Path):</strong>
+    <div class='desc'>Main function to process Python files</div>
+  </li>
+</ul>
+<h2>/home/min/Documents/DocGenerator/test.py</h2>
+<ul>
+  <li><strong>class MathUtils:</strong>
+    <div class='desc'>A utility class for basic mathematical operations.</div>
+    <ul>
+      <li><strong>def __init__(self):</strong>
+        <div class='desc'>Initialize the MathUtils instance.
+This class currently does not maintain any state.</div>
+      </li>
+      <li><strong>def compute_sqrt(self, x):</strong>
+        <div class='desc'>Compute the square root of a non-negative number.
+
+Parameters:
+x (float): The number to compute the square root of. Must be >= 0.
+
+Returns:
+float: The square root of the input number.
+
+Raises:
+ValueError: If x is negative.</div>
+      </li>
+      <li><strong>def compute_pow(self, base, exponent):</strong>
+        <div class='desc'>Compute the result of raising a number to a power.
+
+Parameters:
+base (float): The base number.
+exponent (float): The exponent to raise the base to.
+
+Returns:
+float: The result of base raised to the power of exponent.</div>
+      </li>
+    </ul>
+  </li>
+  <li><strong>def example_usage():</strong>
+    <div class='desc'>Demonstrate usage of the MathUtils class.</div>
+  </li>
+</ul>
+<h2>/home/min/Documents/DocGenerator/parser.py</h2>
+<ul>
+  <li><strong>class TokenType(Enum):</strong>
+  </li>
+  <li><strong>class Token:</strong>
+  </li>
+  <li><strong>class DocumentNode:</strong>
+  </li>
+  <li><strong>def extract_docstring(lines: List[str], start_idx: int) -> tuple[Optional[str], int]:</strong>
+    <div class='desc'>Extract docstring starting from the given index.
+Returns (docstring, next_line_index)</div>
+  </li>
+  <li><strong>def parse(lines: List[str], parent_indent: int = -1) -> List[DocumentNode]:</strong>
+    <div class='desc'>Recursively parse Python code into DocumentNode tree.
+Detects indentation automatically.</div>
+  </li>
+  <li><strong>def print_tree(nodes_by_file: dict[Path, list[DocumentNode]]):</strong>
+    <div class='desc'>Pretty print the document tree for multiple files.</div>
+  </li>
+  <li><strong>def _print_nodes(nodes: list[DocumentNode], level: int = 0):</strong>
+  </li>
+  <li><strong>def generate_html(nodes_by_file: dict[Path, list[DocumentNode]], level=0):</strong>
+  </li>
+  <li><strong>def _generate_nodes_html(nodes, level=0):</strong>
+  </li>
+  <li><strong>def save_html(nodes_by_file: dict[Path, list[DocumentNode]], output_file="index.html"):</strong>
+  </li>
+</ul>
+</body>
+</html>
