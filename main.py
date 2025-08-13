@@ -3,7 +3,7 @@ from parser import parse, print_tree, save_html
 from collections import defaultdict
 
 
-def main(path: Path):
+def code_to_docs(path: Path):
     """Main function to process Python files"""
     files = []
 
@@ -36,4 +36,4 @@ def main(path: Path):
 
 if __name__ == "__main__":
     path = Path(".")
-    main(path)
+    code_to_docs(path)
